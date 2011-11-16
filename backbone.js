@@ -901,7 +901,7 @@
   };
 
   // Cached regex to split keys for `delegate`.
-  var eventSplitter = /^(\S+)\s*(.*)$/;
+  var eventSplitter = /^([^\s\[\]]+)(\[([^\[\]]+)\])?\s*(.*)$/;
 
   // List of view options to be merged as properties.
   var viewOptions = ['model', 'collection', 'el', 'id', 'attributes', 'className', 'tagName'];
@@ -967,13 +967,13 @@
         var method = this[events[key]];
         if (!method) throw new Error('Event "' + events[key] + '" does not exist');
         var match = key.match(eventSplitter);
-        var eventName = match[1], selector = match[2];
+        var eventName = match[1], eventData = match[3], selector = match[4];
         method = _.bind(method, this);
         eventName += '.delegateEvents' + this.cid;
         if (selector === '') {
           $(this.el).bind(eventName, method);
         } else {
-          $(this.el).delegate(selector, eventName, method);
+          $(this.el).delegate(selector, eventName, eventData, method);
         }
       }
     },
