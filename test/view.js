@@ -56,6 +56,26 @@ $(document).ready(function() {
     equals(counter2, 3);
   });
 
+
+  test("View: delegateEvents with eventData", function() {
+    var counter = counter2 = 0;
+    view.el = document.body;
+    view.increment = function(event){ if(event && event.data == "hall o") counter++; };
+    //I depend on the increment of counter2 on click (see View: delegateEvents)    
+    var events = {"click[hall o] #qunit-banner": "increment"};
+    view.delegateEvents(events);
+    $('#qunit-banner').trigger('click');
+    equals(counter, 1);
+    equals(counter2, 1);
+    $('#qunit-banner').trigger('click');
+    equals(counter, 2);
+    equals(counter2, 2);
+    view.delegateEvents(events);
+    $('#qunit-banner').trigger('click');
+    equals(counter, 3);
+    equals(counter2, 3);
+  });
+
   test("View: undelegateEvents", function() {
     var counter = counter2 = 0;
     view.el = document.body;
